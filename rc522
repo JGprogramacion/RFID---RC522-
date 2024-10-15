@@ -1,0 +1,32 @@
+//Incluir librerias para manejo de modulo RC522.
+#include <SPI.h>                          //Libreria para comunicación (Serial Peripheral Interface)
+#include <MFRC522.h>                      //Libreria que proporciona las funciones específicas para interactuar con el módulo RFID RC522.
+
+#define pinSDA 10   // Pin SDA (SS)
+#define pinReset 9   // Pin de reset
+
+MFRC522 lector(pinSDA, pinReset);        // Crear instancia del lector RFID
+
+void setup() {
+  Serial.begin(9600);                                       // Iniciar comunicación serial con monitor de Arduino.
+  SPI.begin();                                              // Iniciar comunicación SPI
+  lector.PCD_Init();                                        // Iniciar el RC522
+  Serial.println("Acerca la tarjeta al lector...");         //Mensaje de inicio.
+}
+
+void loop() {
+  // Revisar si hay una tarjeta presente
+  if (lector.PICC_IsNewCardPresent()) {
+    if (lector.PICC_ReadCardSerial()) {
+      Serial.print("UID de la tarjeta: ");
+      
+      // Imprimir UID de la tarjeta RFID
+      for (byte i = 0; i < lector.uid.size; i++) {
+        Serial.print(lector.uid.uidByte[i], HEX);
+        Serial.print(" ");
+      }
+      Serial.println();
+      lector.PICC_HaltA(); // Detener la tarjeta
+    }
+  }
+}
