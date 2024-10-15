@@ -9,15 +9,14 @@ MFRC522 lector(pinSDA, pinReset);        // Crear instancia del lector RFID
 
 void setup() {
   Serial.begin(9600);                                       // Iniciar comunicación serial con monitor de Arduino.
-  SPI.begin();                                              // Iniciar comunicación SPI
-  lector.PCD_Init();                                        // Iniciar el RC522
-  Serial.println("Acerca la tarjeta al lector...");         //Mensaje de inicio.
+  SPI.begin();                                              // Inicia el bus SPI para comunicación con el RC522
+  lector.PCD_Init();                                        // Inicia el módulo RFID RC522
+  Serial.println("Acerca la tarjeta al lector...");         //imprime un mensaje en el Monitor Serial para informar al usuario que el lector está listo para recibir una tarjeta.
 }
 
 void loop() {
-  // Revisar si hay una tarjeta presente
-  if (lector.PICC_IsNewCardPresent()) {
-    if (lector.PICC_ReadCardSerial()) {
+  if (lector.PICC_IsNewCardPresent()) {       // Revisar si hay una tarjeta presente
+    if (lector.PICC_ReadCardSerial()) {       // intenta leer el UID de la tarjeta. Solo si la lectura tiene éxito, se ejecuta el siguiente bloque de código.
       Serial.print("UID de la tarjeta: ");
       
       // Imprimir UID de la tarjeta RFID
